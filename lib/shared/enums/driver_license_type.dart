@@ -1,0 +1,1 @@
+enum DriverLicenseType {temporary, definitive}
