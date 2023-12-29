@@ -123,7 +123,7 @@ class HomeState extends State<Home> {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => AuthentificationPermis()));
                     },
-                    child: const Card(
+                    child:  const Card(
                       color: Colors.white38,
                       elevation: 20.0,
                       child: VerificationCard(

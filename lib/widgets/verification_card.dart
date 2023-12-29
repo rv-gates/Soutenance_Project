@@ -16,7 +16,7 @@ class VerificationCard extends StatelessWidget {
     return Card(
       color: color,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(bottom: 18.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
