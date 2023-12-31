@@ -19,40 +19,28 @@ class AddDriver extends ConsumerStatefulWidget {
 
 class _AddDriverState extends ConsumerState<AddDriver> {
   late final FormGroup _form, _driverForm, _driverLicenseForm;
-  //late final FormControl<bool> _categories;
-  List categories = [];
 
   final bool selected = true;
-  late final FormControl<DriverCreated> _driverId;
 
   @override
   void initState() {
     super.initState();
-    _driverId = FormControl(validators: [Validators.required]);
+
     _driverForm = fb.group({
-      "driverId": _driverId,
-      "lastname":
-      FormControl<String>(value: '', validators: [Validators.required]),
-      "firstname":
-      FormControl<String>(value: '', validators: [Validators.required]),
-      "profession":
-      FormControl<String>(value: '', validators: [Validators.required]),
-      "civility":
-      FormControl<String>(value: '', validators: [Validators.required]),
-      "email": FormControl<String>(
-          value: '', validators: [Validators.required, Validators.email]),
-      "telephone":
-      FormControl<String>(value: '', validators: [Validators.number]),
+      "lastname": FormControl<String>(value: '', validators: [Validators.required]),
+      "firstname": FormControl<String>(value: '', validators: [Validators.required]),
+      "profession": FormControl<String>(value: '', validators: [Validators.required]),
+      "civility": FormControl<String>(value: '', validators: [Validators.required]),
+      "email": FormControl<String>(value: '', validators: [Validators.required, Validators.email]),
+      "telephone": FormControl<String>(value: '', validators: [Validators.number]),
     });
 
     _driverLicenseForm = fb.group({
-      "id": FormControl<String>(validators: [Validators.required]),
       "type": FormControl<DriverLicenseType>(validators: [Validators.required]),
-      "categories": FormArray<DriverLicenseCategory>(
-          categories.map((item) => FormControl<DriverLicenseCategory>(),)
-              .toList()),
-
-
+      "categories": FormArray<bool>(
+        DriverLicenseCategory.values.map((category) => FormControl<bool>()).toList(),
+        validators: [Validators.required],
+      ),
     });
 
     _form = fb.group({
@@ -62,8 +50,7 @@ class _AddDriverState extends ConsumerState<AddDriver> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      AlertDialog(
+  Widget build(BuildContext context) => AlertDialog(
         backgroundColor: Colors.blueGrey,
         title: const Padding(
           padding: EdgeInsets.all(8.0),
@@ -75,10 +62,7 @@ class _AddDriverState extends ConsumerState<AddDriver> {
           ),
         ),
         content: SizedBox(
-          height: MediaQuery
-              .of(context)
-              .size
-              .height / 2,
+          height: MediaQuery.of(context).size.height / 2,
           child: SingleChildScrollView(
             child: ReactiveForm(
               formGroup: _form,
@@ -102,7 +86,7 @@ class _AddDriverState extends ConsumerState<AddDriver> {
                     padding: EdgeInsets.only(bottom: 8.0),
                     child: CustomTextField(
                       formControlName: "driver.firstname",
-                      label: "prenom",
+                      label: "Prénom",
                     ),
                   ),
 
@@ -110,7 +94,7 @@ class _AddDriverState extends ConsumerState<AddDriver> {
                     padding: EdgeInsets.only(bottom: 8.0),
                     child: CustomTextField(
                       formControlName: "driver.profession",
-                      label: "profession",
+                      label: "Profession",
                     ),
                   ),
 
@@ -118,7 +102,7 @@ class _AddDriverState extends ConsumerState<AddDriver> {
                     padding: EdgeInsets.only(bottom: 8.0),
                     child: CustomTextField(
                       formControlName: "driver.email",
-                      label: "email",
+                      label: "Email",
                       inputType: TextInputType.emailAddress,
                     ),
                   ),
@@ -127,7 +111,7 @@ class _AddDriverState extends ConsumerState<AddDriver> {
                     padding: EdgeInsets.only(bottom: 8.0),
                     child: CustomTextField(
                       formControlName: "driver.telephone",
-                      label: "telephone",
+                      label: "Téléphone",
                     ),
                   ),
 
@@ -135,34 +119,16 @@ class _AddDriverState extends ConsumerState<AddDriver> {
                     padding: EdgeInsets.only(bottom: 8.0),
                     child: CustomTextField(
                       formControlName: "driver.civility",
-                      label: "civility",
+                      label: "Civilité",
                     ),
                   ),
 
-                  Wrap(
-                      direction: Axis.horizontal,
-                      children: DriverLicenseCategory.values
-                          .map(
-                            (item) =>
-
-                            ReactiveCheckboxListTile(
-                              //formControl: ,
-                              formControlName: 'driverLicense.categories',
-                              title: Text(item.name),
-                              onChanged: (value) {
-                                setState(() {
-                                  if (selected) {
-                                   /* categories.addAll(
-                                        categories.map((email) =>
-                                            FormControl<bool>(value: true))
-                                            .toList());*/
-                                    }
-                                    });
-                              },
-
-                            ),
-                      )
-                          .toList()),
+                  ...DriverLicenseCategory.values
+                      .map((category) => ReactiveCheckboxListTile(
+                            formControlName: 'driverLicense.categories.${category.index}',
+                            title: Text(category.name),
+                          ))
+                      .toList(),
 
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
@@ -170,11 +136,10 @@ class _AddDriverState extends ConsumerState<AddDriver> {
                       formControlName: 'driverLicense.type',
                       hint: const Text('Type de permis'),
                       items: DriverLicenseType.values
-                          .map((item) =>
-                          DropdownMenuItem<DriverLicenseType>(
-                            value: item,
-                            child: Text(item.name),
-                          ))
+                          .map((item) => DropdownMenuItem<DriverLicenseType>(
+                                value: item,
+                                child: Text(item.name),
+                              ))
                           .toList(),
                     ),
                   ),
@@ -184,50 +149,43 @@ class _AddDriverState extends ConsumerState<AddDriver> {
           ),
         ),
         actions: [
-          Row(
-            children: [
-              ElevatedButton(
-                child: const Text(
-                  'Annuler',
-                  style: TextStyle(fontSize: 12.0),
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-              const SizedBox(
-                width: 9.0,
-              ),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () => addDriver(),
-                  child: const Text(
-                    'Ajouter',
-                    style: TextStyle(fontSize: 12.0),
-                  ),
-                ),
-              ),
-            ],
+          //
+          ElevatedButton(
+            child: const Text('Annuler', style: TextStyle(fontSize: 12.0)),
+            onPressed: () => Navigator.pop(context),
+          ),
+
+          const SizedBox(width: 9.0),
+
+          Expanded(
+            child: ElevatedButton(
+              onPressed: registerDriver,
+              child: const Text('Ajouter', style: TextStyle(fontSize: 12.0)),
+            ),
           ),
         ],
       );
 
-  /*void _CheckboxChange(FormControl<bool> value) {
-    setState(() {
-      _categories = value;
-    });
-  }*/
-
-  Future<void> addDriver() async {
+  Future<void> registerDriver() async {
     try {
-      await ref
-          .read(driversService)
-          .registerDriver(
-        driver: Driver.fromJson(_driverForm.value),
-        license: DriverLicense.fromJson({
-          ..._driverLicenseForm.value,
-          'id': _driverId.value!.id,
+      final categoriesArray = _driverLicenseForm.control('categories') as FormArray;
 
-        }),
-      );
+      final selectedCategories = categoriesArray.controls
+          .where((control) => control.value == true)
+          .map((control) => DriverLicenseCategory.values[categoriesArray.controls.indexOf(control)])
+          .toList();
+
+      final createdDriver = await ref.read(driversService).registerDriver(
+            driver: Driver.fromJson(_driverForm.value),
+            license: DriverLicense.fromJson({
+              'type': (_driverLicenseForm.control('type') as FormControl<DriverLicenseType>).value!.name,
+              'categories': selectedCategories.map((category) => category.name).toList(),
+            }),
+          );
+
+      if (!mounted) return;
+
+      Navigator.pop(context, createdDriver);
     } catch (e) {
       log('', name: 'REGISTER DRIVER', error: e);
     }

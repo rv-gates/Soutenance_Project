@@ -1,12 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:soutenance_app/core/modele/driver/driver.dart';
-import 'package:soutenance_app/core/modele/permis/driver_license.dart';
 import 'package:soutenance_app/pasage/my_new_app.dart';
 import 'package:soutenance_app/screen/options/addSomething/add_owner.dart';
 import 'package:soutenance_app/screen/options/addSomething/ajout_user/add_driver.dart';
 import '../../../widgets/utils.dart';
-import 'add_dialog/add_driver_license_dialog.dart';
 import 'ajout_carte_grise/add_vehicle.dart';
 
 class DataManagement extends StatefulWidget {
@@ -17,7 +14,6 @@ class DataManagement extends StatefulWidget {
 }
 
 class DataManagementState extends State<DataManagement> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,89 +23,85 @@ class DataManagementState extends State<DataManagement> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-        Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-        SizedBox(
-        width: 110.0,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: ElevatedButton(
-            onPressed: () => showAddDriverDialog(),
-            child: const Text(
-              'ajouter usager',
-              style: TextStyle(fontSize: 11.0),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 110.0,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: ElevatedButton(
+                    onPressed: () => showAddDriverDialog(),
+                    child: const Text(
+                      'ajouter usager',
+                      style: TextStyle(fontSize: 11.0),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: SizedBox(
+                  width: 110.0,
+                  child: ElevatedButton(
+                    onPressed: () =>
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MyNewApp())),
+                    child: const Text(
+                      'Générer code QR',
+                      style: TextStyle(fontSize: 11.0),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(left: 8.0),
-        child: SizedBox(
-          width: 110.0,
-          child: ElevatedButton(
-            onPressed: () =>
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const MyNewApp())),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: SizedBox(
+                  width: 110.0,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final result = await showDialog(
+                        context: context,
+                        builder: (context) => const AddVehicle(),
+                      );
 
-            child: const Text(
-            'Générer code QR',
-            style: TextStyle(fontSize: 11.0),
+                      if (!mounted || result == null) return;
+
+                      Utils.showSnackBar(context, 'véhicule enrégistrée');
+                    },
+                    child: const Text(
+                      'Ajouter un vehicule',
+                      style: TextStyle(fontSize: 11.0),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: SizedBox(
+                  width: 110.0,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const AddOwner(),
+                      );
+                    },
+                    child: const Text(
+                      'Ajouter un propriétaire',
+                      style: TextStyle(fontSize: 11.0),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
+        ],
       ),
-    ),
-    ],
-    ),
-    Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-    Padding(
-    padding: const EdgeInsets.only(left: 8.0),
-    child: SizedBox(
-    width: 110.0,
-    child: ElevatedButton(
-    onPressed: () async {
-    final result = await showDialog(
-    context: context,
-    builder: (context) => const AddVehicle(),
-    );
-
-    if (!mounted || result == null) return;
-
-    Utils.showSnackBar(context, 'véhicule enrégistrée');
-    },
-    child: const Text(
-    'Ajouter un vehicule',
-    style: TextStyle(fontSize: 11.0),
-    ),
-    ),
-    ),
-    ),
-    Padding(
-    padding: const EdgeInsets.only(left: 8.0),
-    child: SizedBox(
-    width: 110.0,
-    child: ElevatedButton(
-    onPressed: () {
-    showDialog(
-    context: context,
-    builder: (context) => const AddOwner(),
-    );
-    },
-    child: const Text(
-    'Ajouter un propriétaire',
-    style: TextStyle(fontSize: 11.0),
-    ),
-    ),
-    ),
-    ),
-    ],
-    ),
-    ]
-    ,
-    )
-    ,
     );
   }
 
@@ -123,7 +115,7 @@ class DataManagementState extends State<DataManagement> {
 
     if (createdDriver == null) return;
 
-    Utils.showSnackBar(context, 'conducteur enrégistré');
+    Utils.showSnackBar(context, 'Conducteur enregistré');
   }
 
 /*Future<void> showRegisterDriverLicenseDialog() async {
