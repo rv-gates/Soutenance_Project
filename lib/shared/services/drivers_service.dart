@@ -12,6 +12,7 @@ class _DriversService extends FirestoreService {
   final Ref _ref;
 
   _DriversService(this._ref);
+
   @override
   String get collection => 'DRIVERS';
 
@@ -25,13 +26,9 @@ class _DriversService extends FirestoreService {
     }
   }
 
-  Future<DriverCreated> registerDriver({
-    required Driver driver,
-    required DriverLicense license
-  }) async {
+  Future<DriverCreated> registerDriver({required Driver driver, required DriverLicense license}) async {
     try {
-      final createdLicense = await _ref.read(driverLicensesService).registerDriverLicense(
-          license);
+      final createdLicense = await _ref.read(driverLicensesService).registerDriverLicense(license);
 
       final id = const UuidV4().generate();
       final data = {
@@ -39,6 +36,7 @@ class _DriversService extends FirestoreService {
         'id': id,
         'driverLicenseId': createdLicense.id,
       };
+
       await super.post(id: id, data: data);
 
       return DriverCreated.fromJson(data);
