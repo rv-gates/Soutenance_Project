@@ -3,14 +3,34 @@ import 'package:soutenance_app/GridViewOptions/authentification-permis/authentif
 import 'package:soutenance_app/screen/options/sanction/add_sanction.dart';
 
 class InformationPermis extends StatefulWidget {
-  const InformationPermis({super.key});
+  const InformationPermis({super.key,});
 
   @override
   State<InformationPermis> createState() => _InformationPermisState();
 }
 
 class _InformationPermisState extends State<InformationPermis> {
+
   @override
+  Widget build(BuildContext context) {
+    // Affichage des détails associés au code QR sur la nouvelle page
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Détails du Code QR'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Détails du code QR :'),
+            //Text(widget.qrDetails.toString()),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /*@override
   Widget build(BuildContext context) {
     return Scaffold(
       body:
@@ -95,5 +115,5 @@ class _InformationPermisState extends State<InformationPermis> {
         ],
       ),
     );
-  }
+  }*/
 }

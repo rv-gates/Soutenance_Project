@@ -1,14 +1,19 @@
-import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:soutenance_app/GridViewOptions/authentification-permis/information_permis.dart';
 
-class AuthentificationPermis extends StatefulWidget {
+
+class AuthentificationPermis extends ConsumerStatefulWidget {
+  const AuthentificationPermis({super.key});
+
   @override
-  State<AuthentificationPermis> createState() => AuthentificationPermisState();
+  ConsumerState createState() => _AuthentificationPermisState();
 }
 
-class AuthentificationPermisState extends State<AuthentificationPermis> {
+class _AuthentificationPermisState extends ConsumerState<AuthentificationPermis> {
+
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -16,10 +21,6 @@ class AuthentificationPermisState extends State<AuthentificationPermis> {
   @override
   void reassemble() {
     super.reassemble();
-    /*if (Platform.isAndroid) {
-      controller!.pauseCamera();
-    }
-    controller!.resumeCamera();*/
   }
 
   @override
@@ -30,7 +31,6 @@ class AuthentificationPermisState extends State<AuthentificationPermis> {
 
   @override
   Widget build(BuildContext context) {
-    // controller?.resumeCamera();
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -42,15 +42,12 @@ class AuthentificationPermisState extends State<AuthentificationPermis> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  if (result != null)
-                    Text(
-                        'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                  else
                     const Padding(
                       padding: EdgeInsets.all(10.0),
                       child: Text(
                         'veuillez mettre le QR code dans la zone de scan qui est délimité par des barres rouge',
-                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.0),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 18.0),
                       ),
                     ),
                   Row(
@@ -71,58 +68,15 @@ class AuthentificationPermisState extends State<AuthentificationPermis> {
                               },
                             )),
                       ),
-                      /*Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.flipCamera();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getCameraInfo(),
-                              builder: (context, snapshot) {
-                                if (snapshot.data != null) {
-                                  return Text(
-                                      'Camera facing ${describeEnum(snapshot.data!)}');
-                                } else {
-                                  return const Text('loading');
-                                }
-                              },
-                            )),
-                      ), */
-                    ],
-                  ),
-                  /*Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.pauseCamera();
-                          },
-                          child: const Text('pause',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.resumeCamera();
-                          },
-                          child: const Text('resume',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      )
-                    ],
-                  ),*/
                 ],
               ),
+            ],
             ),
-          )
+          ),
+          ),
+
         ],
+
       ),
     );
   }
@@ -141,7 +95,6 @@ class AuthentificationPermisState extends State<AuthentificationPermis> {
           borderLength: 30,
           borderWidth: 10,
           cutOutSize: scanArea),
-      // onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
     );
   }
 
@@ -149,26 +102,35 @@ class AuthentificationPermisState extends State<AuthentificationPermis> {
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen((scanData) {
+
+    controller.scannedDataStream.listen((scanData) async{
+      //final collect = FirebaseFirestore.instance.collection('DRIVER_LICENSES').id;
+
+      DocumentSnapshot qrDoc = await FirebaseFirestore.instance
+          .collection('DRIVER_LICENSES')
+          .doc(scanData.code)
+          .get();
       setState(() {
         result = scanData;
       });
 
-      if (result != null) {
-        print("Result");
+      if (qrDoc.id != scanData.code) {
         print(result!.code);
-      }
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => const InformationPermis()));
-    });
-  }
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Erreur lors du scan"),
+            );
+          },
+        );
 
-/*void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
-    if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('no Permission')),
-      );
-    }
-  }*/
+      } else{
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const InformationPermis()));
+      }
+    });
+
+
+  }
 }
