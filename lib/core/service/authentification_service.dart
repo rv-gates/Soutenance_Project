@@ -47,7 +47,7 @@ class AuthentificationService {
 
       data.addAll(user.toJson());
 
-       await _ref.read(userService).drivers;
+       await _ref.read(userService).users;
       //     .read(firestoreProvider)
       //     .firestore
       //     .collection('users')

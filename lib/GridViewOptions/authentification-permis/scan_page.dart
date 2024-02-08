@@ -1,22 +1,23 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:soutenance_app/GridViewOptions/authentification-permis/information_permis.dart';
+import 'package:soutenance_app/GridViewOptions/authentification-permis/permit_information.dart';
 
-
-class AuthentificationPermis extends ConsumerStatefulWidget {
-  const AuthentificationPermis({super.key});
+class ScanPage extends ConsumerStatefulWidget {
+  const ScanPage({super.key});
 
   @override
-  ConsumerState createState() => _AuthentificationPermisState();
+  ConsumerState createState() => _ScanPageState();
 }
 
-class _AuthentificationPermisState extends ConsumerState<AuthentificationPermis> {
+class _ScanPageState extends ConsumerState<ScanPage> {
 
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  final String _result = "";
 
   @override
   void reassemble() {
@@ -104,33 +105,77 @@ class _AuthentificationPermisState extends ConsumerState<AuthentificationPermis>
     });
 
     controller.scannedDataStream.listen((scanData) async{
-      //final collect = FirebaseFirestore.instance.collection('DRIVER_LICENSES').id;
 
-      DocumentSnapshot qrDoc = await FirebaseFirestore.instance
-          .collection('DRIVER_LICENSES')
-          .doc(scanData.code)
-          .get();
-      setState(() {
-        result = scanData;
-      });
+      Map<String, dynamic> jsonData = json.decode(scanData.code.toString());
+      String scannedId = jsonData['id'];
 
-      if (qrDoc.id != scanData.code) {
-        print(result!.code);
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Erreur lors du scan"),
-            );
-          },
-        );
+      if (result != null) {
+        try {
+          FirebaseFirestore.instance
+              .collection('DRIVER_LICENSES')
+              .doc(scannedId)
+              .get()
+              .then((DocumentSnapshot documentSnapshot) {
+            if (documentSnapshot.exists ) {
+              var data = documentSnapshot.data();
+              Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          const PermitInformation(/*qrData: barcode.code*/)));
+            } else {
 
-      } else{
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const InformationPermis()));
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const AlertDialog(
+                      title: Text("Erreur lors du scan"),
+                    );
+                  }
+              );
+            }
+          });
+        } catch (e) {
+          print('Erreur lors du décodage du JSON : $e');
+        }
       }
+      /*checkingValue() {
+        try {
+          if (_result != null || _result != "") {
+            if (_result.contains("https") || _result.contains("http")) {
+              return _launchURL(_result);
+            } else {
+              Text("erreur");
+            }
+          }
+        } catch (_) {
+          print("ce n'est pas une url");
+        }
+
+        /*if(qrDoc.exists){
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const PermitInformation()));
+    } else{
+      print("error");
+      showDialog(
+          context: context,
+          builder: (BuildContext context)
+      {
+        return AlertDialog(
+          title: Text("Erreur lors du scan"),
+        );
+      }
+      );
+    }*/
+      }*/
     });
 
-
   }
+
+  /*Future<bool> compareWithFirebase(String qrData) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('qrCodes')
+        .where('data', isEqualTo: qrData)
+        .get();
+    return querySnapshot.docs.isNotEmpty;
+  }*/
 }

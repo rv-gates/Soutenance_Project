@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:soutenance_app/core/modele/driver/driver.dart';
 import 'package:soutenance_app/core/service/authentification_service.dart';
 import 'package:soutenance_app/core/service/firestore_service.dart';
+import 'package:soutenance_app/shared/services/user_service.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../core/modele/user.dart';
@@ -57,6 +59,8 @@ class _DeleteUserState extends ConsumerState<DeleteUser> {
                   //     .then((_) => print('Deleted'))
                   //     .catchError((error) => print('Delete failed: $error'));
                   // Navigator.pop(context);
+                  final UserCreated? user;
+                  await ref.read(userService).deleteUser("");
                 },
                 child: const Text(
                   'Supprimer',

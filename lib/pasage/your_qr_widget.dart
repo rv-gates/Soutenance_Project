@@ -5,7 +5,6 @@ class YourQRWidget extends StatelessWidget {
   final Map<String, dynamic> data;
 
   const YourQRWidget(this.data);
-
   @override
   Widget build(BuildContext context) {
     String qrData = data.toString(); // Transformer les données en String pour le QR code

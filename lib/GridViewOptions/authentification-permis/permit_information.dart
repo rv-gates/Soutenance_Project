@@ -1,32 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:soutenance_app/GridViewOptions/authentification-permis/authentification_permis.dart';
-import 'package:soutenance_app/screen/options/sanction/add_sanction.dart';
 
-class InformationPermis extends StatefulWidget {
-  const InformationPermis({super.key,});
+class PermitInformation extends StatefulWidget {
+  //final Barcode?  qrData;
+  const PermitInformation({super.key,/*required this.qrData,*/});
 
   @override
-  State<InformationPermis> createState() => _InformationPermisState();
+  State<PermitInformation> createState() => _PermitInformationState();
 }
 
-class _InformationPermisState extends State<InformationPermis> {
+class _PermitInformationState extends State<PermitInformation> {
 
   @override
   Widget build(BuildContext context) {
-    // Affichage des détails associés au code QR sur la nouvelle page
     return Scaffold(
       appBar: AppBar(
-        title: Text('Détails du Code QR'),
+        title: const Text('Détails du Code QR'),
       ),
-      body: Center(
+      body:  const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Détails du code QR :'),
-            //Text(widget.qrDetails.toString()),
+            //Text(widget.qrData!.email as String),
           ],
         ),
       ),
+
+
     );
   }
 
@@ -113,6 +112,15 @@ class _InformationPermisState extends State<InformationPermis> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => const AddSanctionDialog(),
+          );
+        },
       ),
     );
   }*/

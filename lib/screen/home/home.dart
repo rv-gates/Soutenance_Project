@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:soutenance_app/GridViewOptions/authentification-permis/authentification_permis.dart';
+import 'package:soutenance_app/GridViewOptions/authentification-permis/scan_page.dart';
 import 'package:soutenance_app/GridViewOptions/verification_carte_grise/verification_carte_grise.dart';
 import '../../widgets/verification_card.dart';
 import '../options/addSomething/data_management.dart';
@@ -121,7 +121,7 @@ class HomeState extends State<Home> {
                   InkWell(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => AuthentificationPermis()));
+                          builder: (context) => ScanPage()));
                     },
                     child:  const Card(
                       color: Colors.white38,

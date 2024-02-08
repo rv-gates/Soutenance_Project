@@ -12,7 +12,7 @@ class _UserService extends FirestoreService{
   @override
   String get collection => 'USER';
 
-  Future<List<UserCreated>> get drivers async {
+  Future<List<UserCreated>> get users async {
     try {
       final docs = await super.docs;
 
@@ -21,4 +21,16 @@ class _UserService extends FirestoreService{
       rethrow;
     }
   }
+
+
+  Future<void> deleteUser(String userId) async {
+    try {
+      await firestore.collection(collection).doc(userId).delete();
+    } catch (e) {
+      // Gérer l'erreur ou la relancer si nécessaire
+      print('Erreur lors de la suppression de l\'utilisateur : $e');
+      rethrow;
+    }
+  }
+
 }

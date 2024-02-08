@@ -86,7 +86,7 @@ class DataManagementState extends State<DataManagement> {
                     ),
                   ),
                 ),
-                InkWell(
+               /* InkWell(
                   onTap: () async {
                     final result = await showDialog(
                       context: context,
@@ -105,7 +105,7 @@ class DataManagementState extends State<DataManagement> {
                       color: Colors.blueGrey,
                     ),
                   ),
-                ),
+                ),*/
               ],
             ),
           ),

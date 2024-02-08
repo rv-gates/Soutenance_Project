@@ -121,7 +121,7 @@ class _AdminScreenState extends ConsumerState<AdminScreen> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          DrawerScreen(),
+          const DrawerScreen(),
           AnimatedContainer(
             transform: Matrix4.translationValues(xOffset, yOffset, 0)
               ..scale(isDrawerOpen ? 0.85 : 1.00)

@@ -32,7 +32,7 @@ class _DriversService extends FirestoreService {
 
       final id = const UuidV4().generate();
       final data = {
-        ...driver.toJson(),
+        ...driver.toJson(), // crée un format pouvant etre enrégistrer sur Firebase
         'id': id,
         'driverLicenseId': createdLicense.id,
       };

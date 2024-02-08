@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:soutenance_app/pasage/your_qr_widget.dart';
@@ -27,8 +29,9 @@ class MyNewApp extends StatelessWidget {
             }*/
            // var sna = snapshot.data!.docs.first.data();
             var data = Map<String, dynamic>.from(snapshot.data!.docs.first.data() as Map<String, dynamic>);
+            Map<String, dynamic> decodedData = json.decode(json.encode(data));
             //print(data);
-            return YourQRWidget(data); // Passer les données au widget pour générer le QR code
+            return YourQRWidget(decodedData); // Passer les données au widget pour générer le QR code
           }
         },
       ),

@@ -30,14 +30,6 @@ abstract class FirestoreService {
     }
   }
 
-  Future DeleteUser(String data, String id) async {
-    // return await _ref
-    //     .read(firestoreProvider)
-    //     .firestore
-    //     .collection('user')
-    //     .doc(id)
-    //     .delete();
-  }
 
   Future<Driver> addUsager({
     required Driver driver,
