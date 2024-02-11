@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:soutenance_app/GridViewOptions/authentification-permis/qr_coge_generate/qr_code_generator.dart';
-import 'package:soutenance_app/core/modele/user.dart';
-import 'package:soutenance_app/core/service/firestore_service.dart';
 import 'package:soutenance_app/login/admin/drawer/drawer_column.dart';
-import 'package:soutenance_app/widgets/add_agent/add_agent.dart';
-import 'package:soutenance_app/widgets/add_sanction/add_sanction.dart';
-import 'package:soutenance_app/widgets/custom_text_field.dart';
-
 import '../../../core/service/authentification_service.dart';
 import '../../../widgets/new_row.dart';
 

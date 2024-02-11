@@ -4,6 +4,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../core/modele/user.dart';
 import '../../core/service/authentification_service.dart';
+import '../../shared/enums/role_user.dart';
 import '../custom_text_field.dart';
 
 class AddAgentDialog extends ConsumerStatefulWidget {
@@ -34,6 +35,8 @@ class _AddAgentDialogState extends ConsumerState<AddAgentDialog> {
       "matricule":
           FormControl<String>(value: '', validators: [Validators.required]),
       "password": _passwordCtlr,
+      "role": FormControl<RoleUser>(
+           validators: [Validators.required]),
     });
   }
 
@@ -55,13 +58,13 @@ class _AddAgentDialogState extends ConsumerState<AddAgentDialog> {
         child: SingleChildScrollView(
           child: ReactiveForm(
             formGroup: _form,
-            child: const Column(
+            child:  Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 5.0,
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(bottom: 8.0),
                   child: SingleChildScrollView(
                     child: CustomTextField(
@@ -71,7 +74,7 @@ class _AddAgentDialogState extends ConsumerState<AddAgentDialog> {
                         inputType: TextInputType.emailAddress),
                   ),
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(bottom: 8.0),
                   child: CustomTextField(
                       // controller: lastNameController,
@@ -79,7 +82,7 @@ class _AddAgentDialogState extends ConsumerState<AddAgentDialog> {
                       label: "Nom",
                       ),
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(bottom: 8.0),
                   child: CustomTextField(
                       // controller: firstNameController,
@@ -87,7 +90,7 @@ class _AddAgentDialogState extends ConsumerState<AddAgentDialog> {
                       label: "prénom",
                      ),
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(bottom: 8.0),
                   child: CustomTextField(
                       //controller: matriculeController,
@@ -95,7 +98,7 @@ class _AddAgentDialogState extends ConsumerState<AddAgentDialog> {
                       label: "matricule",
                       ),
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(bottom: 8.0),
                   child: CustomTextField(
                       formControlName: "password",
@@ -103,6 +106,20 @@ class _AddAgentDialogState extends ConsumerState<AddAgentDialog> {
                       obscureText: false,
                       label: "mot de passe par default",
                       ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: ReactiveDropdownField<RoleUser>(
+                    formControlName: 'role',
+                    hint: const Text("catégorie de l'agent"),
+                    items: RoleUser.values
+                        .map((item) => DropdownMenuItem<RoleUser>(
+                      value: item,
+                      child: Text(item.name),
+                    ))
+                        .toList(),
+                  ),
                 ),
               ],
             ),

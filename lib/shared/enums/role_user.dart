@@ -1,0 +1,1 @@
+enum RoleUser {user, admin}

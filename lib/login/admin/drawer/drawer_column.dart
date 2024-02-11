@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:soutenance_app/pasage/my_new_app.dart';
 import 'package:soutenance_app/screen/options/addSomething/data_management.dart';
-import '../../../widgets/add_agent/add_agent.dart';
+import '../../../widgets/add_agent_dialog/add_agent_dialog.dart';
 import '../../../widgets/add_sanction/add_sanction.dart';
 import '../../../widgets/new_row.dart';
 

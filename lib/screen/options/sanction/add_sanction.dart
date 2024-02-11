@@ -21,9 +21,6 @@ class _AddSanctionDialogState extends ConsumerState<AddSanctionDialog> {
   bool _isSecret = false;
   final List<DropdownMenuItem> clientItems = [];
   final List<Sanction> client = [];
-
-  late TextEditingController sanctionController;
-  late TextEditingController descriptionController;
   late final FormGroup _formControl, form;
 
   void getDataFromFirebase() async {
@@ -43,7 +40,7 @@ class _AddSanctionDialogState extends ConsumerState<AddSanctionDialog> {
     super.initState();
     getDataFromFirebase();
     _formControl = fb.group({
-      "date": FormControl(validators: [Validators.required]),
+      "date": FormControl(value: _selectDate,validators: [Validators.required]),
       "sanction": FormControl<Sanction>(validators: [Validators.required]),
     });
   }
@@ -211,6 +208,7 @@ class _AddSanctionDialogState extends ConsumerState<AddSanctionDialog> {
             const SizedBox(
               height: 20,
             ),
+
             SizedBox(
               height: 60.0,
               width: 300.0,
@@ -219,7 +217,6 @@ class _AddSanctionDialogState extends ConsumerState<AddSanctionDialog> {
                 readOnly: true,
                 onChanged: ( change){
 
-                   change;
                 },
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
@@ -231,6 +228,7 @@ class _AddSanctionDialogState extends ConsumerState<AddSanctionDialog> {
                         lastDate: DateTime(2100),
                         initialDate: DateTime.now(),
                       ),
+
                       if (_selectDate != null)
                         {
                           _selectDate = _formControl.control('date').value,
@@ -285,7 +283,6 @@ class _AddSanctionDialogState extends ConsumerState<AddSanctionDialog> {
       if (!mounted) return;
 
       Navigator.pop<ControlDocumentCreated>(context, createControl);
-      print(_formControl);
     } catch (e) {
       log("l'erreur est ", error: e);
     }

@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:soutenance_app/screen/acceuil_page.dart';
 import '../../../screen/home/home.dart';
 import '../../../widgets/custom_text_field.dart';
 import '../admin/admin Screen/admin_screen.dart';
@@ -13,11 +16,12 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-late TextEditingController emailController;
-late TextEditingController passwordController;
 
 class _LoginScreenState extends State<LoginScreen> {
   late final FormGroup forms;
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
+  final _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -165,4 +169,52 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  /*void route() {
+    User? user = FirebaseAuth.instance.currentUser;
+    var routeData = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        if (documentSnapshot.get('role') == "admin") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>  const AdminScreen(),
+            ),
+          );
+        }else{
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>  const AcceuilPage(),
+            ),
+          );
+        }
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+  }
+
+  void signIn(String email, String password) async {
+    if (_formkey.currentState!.validate()) {
+      try {
+        UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        route();
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          print('No user found for that email.');
+        } else if (e.code == 'wrong-password') {
+          print('Wrong password provided for that user.');
+        }
+      }
+    }
+  }*/
 }
