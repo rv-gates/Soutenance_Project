@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -13,20 +13,32 @@ class ScanPage extends ConsumerStatefulWidget {
 }
 
 class _ScanPageState extends ConsumerState<ScanPage> {
-
-  Barcode? result;
-  QRViewController? controller;
+  QRViewController? _qrViewController;
+  late final StreamController<String> _qrStreamCtrl;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  final String _result = "";
+  var streamHasEmitted = false;
 
   @override
-  void reassemble() {
-    super.reassemble();
+  void initState() {
+    super.initState();
+
+    _qrStreamCtrl = StreamController();
+
+    _qrStreamCtrl.stream.listen((data) {
+      if (data.isNotEmpty) {
+        streamHasEmitted = true;
+        final driverLicenseId = json.decode(data)['id'];
+
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => PermitInformation(driverLicenseId: driverLicenseId)));
+        // TODO: creer methode _openPermitInformationPage
+      }
+    });
   }
 
   @override
   void dispose() {
-    controller?.dispose();
+    _qrViewController?.dispose();
+    _qrStreamCtrl.close();
     super.dispose();
   }
 
@@ -43,14 +55,13 @@ class _ScanPageState extends ConsumerState<ScanPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                    const Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Text(
-                        'veuillez mettre le QR code dans la zone de scan qui est délimité par des barres rouge',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 18.0),
-                      ),
+                  const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text(
+                      'veuillez mettre le QR code dans la zone de scan qui est délimité par des barres rouge',
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.0),
                     ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -59,119 +70,53 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
                             onPressed: () async {
-                              await controller?.toggleFlash();
+                              await _qrViewController?.toggleFlash();
                               setState(() {});
                             },
                             child: FutureBuilder(
-                              future: controller?.getFlashStatus(),
+                              future: _qrViewController?.getFlashStatus(),
                               builder: (context, snapshot) {
                                 return Text('Flash: ${snapshot.data}');
                               },
                             )),
                       ),
+                    ],
+                  ),
                 ],
               ),
-            ],
             ),
           ),
-          ),
-
         ],
-
       ),
     );
   }
 
   Widget _buildQrView(BuildContext context) {
-    var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
-        ? 150.0
-        : 300.0;
+    final scanArea =
+        (MediaQuery.of(context).size.width < 400 || MediaQuery.of(context).size.height < 400) ? 150.0 : 300.0;
+
     return QRView(
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
       overlay: QrScannerOverlayShape(
-          borderColor: Colors.red,
-          borderRadius: 10,
-          borderLength: 30,
-          borderWidth: 10,
-          cutOutSize: scanArea),
+        borderColor: Colors.red,
+        borderRadius: 10,
+        borderLength: 30,
+        borderWidth: 10,
+        cutOutSize: scanArea,
+      ),
     );
   }
 
   void _onQRViewCreated(QRViewController controller) {
-    setState(() {
-      this.controller = controller;
+    _qrViewController = controller;
+
+    _qrViewController?.scannedDataStream.listen((scanData) async {
+      if (scanData.code != null && !streamHasEmitted) _qrStreamCtrl.sink.add(scanData.code!);
     });
-
-    controller.scannedDataStream.listen((scanData) async{
-
-      Map<String, dynamic> jsonData = json.decode(scanData.code.toString());
-      String scannedId = jsonData['id'];
-
-      if (result != null) {
-        try {
-          FirebaseFirestore.instance
-              .collection('DRIVER_LICENSES')
-              .doc(scannedId)
-              .get()
-              .then((DocumentSnapshot documentSnapshot) {
-            if (documentSnapshot.exists ) {
-              var data = documentSnapshot.data();
-              Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const PermitInformation(/*qrData: barcode.code*/)));
-            } else {
-
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const AlertDialog(
-                      title: Text("Erreur lors du scan"),
-                    );
-                  }
-              );
-            }
-          });
-        } catch (e) {
-          print('Erreur lors du décodage du JSON : $e');
-        }
-      }
-      /*checkingValue() {
-        try {
-          if (_result != null || _result != "") {
-            if (_result.contains("https") || _result.contains("http")) {
-              return _launchURL(_result);
-            } else {
-              Text("erreur");
-            }
-          }
-        } catch (_) {
-          print("ce n'est pas une url");
-        }
-
-        /*if(qrDoc.exists){
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => const PermitInformation()));
-    } else{
-      print("error");
-      showDialog(
-          context: context,
-          builder: (BuildContext context)
-      {
-        return AlertDialog(
-          title: Text("Erreur lors du scan"),
-        );
-      }
-      );
-    }*/
-      }*/
-    });
-
   }
 
-  /*Future<bool> compareWithFirebase(String qrData) async {
+/*Future<bool> compareWithFirebase(String qrData) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('qrCodes')
         .where('data', isEqualTo: qrData)

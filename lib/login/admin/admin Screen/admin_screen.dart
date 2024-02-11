@@ -117,218 +117,220 @@ class _AdminScreenState extends ConsumerState<AdminScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          const DrawerScreen(),
-          AnimatedContainer(
-            transform: Matrix4.translationValues(xOffset, yOffset, 0)
-              ..scale(isDrawerOpen ? 0.85 : 1.00)
-              ..rotateZ(isDrawerOpen ? -50 : 0),
-            duration: Duration(milliseconds: 200),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: isDrawerOpen
-                  ? BorderRadius.circular(40)
-                  : BorderRadius.circular(0),
-            ),
-            /*appBar: AppBar(
-              title: const Text('ADMINISTRATEUR',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              centerTitle: true,
-              automaticallyImplyLeading: false,
-              actions: [
-                IconButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const AdminSearch();
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            const DrawerScreen(),
+            AnimatedContainer(
+              transform: Matrix4.translationValues(xOffset, yOffset, 0)
+                ..scale(isDrawerOpen ? 0.85 : 1.00)
+                ..rotateZ(isDrawerOpen ? -50 : 0),
+              duration: Duration(milliseconds: 200),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: isDrawerOpen
+                    ? BorderRadius.circular(40)
+                    : BorderRadius.circular(0),
+              ),
+              /*appBar: AppBar(
+                title: const Text('ADMINISTRATEUR',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                centerTitle: true,
+                automaticallyImplyLeading: false,
+                actions: [
+                  IconButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const AdminSearch();
+                          },
+                        );
+                      },
+                      icon: const Icon(Icons.search)),
+                  PopupMenuButton(
+                    itemBuilder: (BuildContext context) => [
+                      const PopupMenuItem(
+                        value: '1',
+                        child: Text('profile'),
+                      ),
+                      PopupMenuItem(
+                        onTap: () {
+                          Navigator.pop(context);
                         },
+                        value: '2',
+                        child: const Text('Deconnexion'),
+                      ),
+                    ],
+                    onSelected: (value) {
+                      // Action à effectuer lorsque l'option est sélectionnée
+                      // Vous pouvez mettre en place la logique pour afficher la fenêtre souhaitée ici
+                    },
+                  ),
+                ],
+              ),*/
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 22.0),
+                    child: Row(
+                      children: [
+                        isDrawerOpen
+                            ? GestureDetector(
+                                child: const Icon(Icons.arrow_back_ios),
+                                onTap: () {
+                                  setState(() {
+                                    xOffset = 0;
+                                    yOffset = 0;
+                                    isDrawerOpen = false;
+                                  });
+                                },
+                              )
+                            : GestureDetector(
+                                child: Icon(Icons.menu),
+                                onTap: () {
+                                  setState(() {
+                                    xOffset = 290;
+                                    yOffset = 80;
+                                    isDrawerOpen = true;
+                                  });
+                                },
+                              ),
+                        SizedBox(
+                          width: 50.0,
+                          height: 10.0,
+                        ),
+                        const Text('ADMINISTRATEUR',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
+                        const Spacer(),
+                        /*PopupMenuButton(
+                          itemBuilder: (BuildContext context) => [
+                            const PopupMenuItem(
+                              value: '1',
+                              child: Text('profile'),
+                            ),
+                            PopupMenuItem(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              value: '2',
+                              child: const Text('Deconnexion'),
+                            ),
+                          ],
+                          onSelected: (value) {
+                            // Action à effectuer lorsque l'option est sélectionnée
+                            // Vous pouvez mettre en place la logique pour afficher la fenêtre souhaitée ici
+                          },
+                        ),*/
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  const CircleAvatar(
+                    radius: 50.0,
+                    backgroundImage: AssetImage(
+                      'images/dgtt2.png',
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text(
+                            'Une erreur est survenue : ${snapshot.error}');
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text('Chargement des données...');
+                      }
+
+                      int? numberOfUsers = snapshot.data?.docs.length;
+
+                      return Text(
+                        'Utilisateurs  enrégistrés: $numberOfUsers',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 15.0),
                       );
                     },
-                    icon: const Icon(Icons.search)),
-                PopupMenuButton(
-                  itemBuilder: (BuildContext context) => [
-                    const PopupMenuItem(
-                      value: '1',
-                      child: Text('profile'),
-                    ),
-                    PopupMenuItem(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      value: '2',
-                      child: const Text('Deconnexion'),
-                    ),
-                  ],
-                  onSelected: (value) {
-                    // Action à effectuer lorsque l'option est sélectionnée
-                    // Vous pouvez mettre en place la logique pour afficher la fenêtre souhaitée ici
-                  },
-                ),
-              ],
-            ),*/
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 22.0),
-                  child: Row(
+                  ),
+                  const SizedBox(height: 20.0),
+                  const Row(
                     children: [
-                      isDrawerOpen
-                          ? GestureDetector(
-                              child: const Icon(Icons.arrow_back_ios),
-                              onTap: () {
-                                setState(() {
-                                  xOffset = 0;
-                                  yOffset = 0;
-                                  isDrawerOpen = false;
-                                });
-                              },
-                            )
-                          : GestureDetector(
-                              child: Icon(Icons.menu),
-                              onTap: () {
-                                setState(() {
-                                  xOffset = 290;
-                                  yOffset = 80;
-                                  isDrawerOpen = true;
-                                });
-                              },
-                            ),
                       SizedBox(
-                        width: 50.0,
-                        height: 10.0,
+                        width: 5.0,
                       ),
-                      const Text('ADMINISTRATEUR',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
-                      const Spacer(),
-                      /*PopupMenuButton(
-                        itemBuilder: (BuildContext context) => [
-                          const PopupMenuItem(
-                            value: '1',
-                            child: Text('profile'),
+                      /*Expanded(
+                        child: ElevatedButton(
+                          child: const Text(
+                            'Ajouter une sanction',
+                            style: TextStyle(
+                                fontSize: 10.0, fontWeight: FontWeight.bold),
                           ),
-                          PopupMenuItem(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            value: '2',
-                            child: const Text('Deconnexion'),
-                          ),
-                        ],
-                        onSelected: (value) {
-                          // Action à effectuer lorsque l'option est sélectionnée
-                          // Vous pouvez mettre en place la logique pour afficher la fenêtre souhaitée ici
-                        },
+                          onPressed: () {
+                          },
+                        ),
                       ),*/
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                const CircleAvatar(
-                  radius: 50.0,
-                  backgroundImage: AssetImage(
-                    'images/dgtt2.png',
+                  const Text(
+                    'Liste des Agents:',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
-                ),
-                const SizedBox(height: 16.0),
-                StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('users')
-                      .snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasError) {
-                      return Text(
-                          'Une erreur est survenue : ${snapshot.error}');
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Text('Chargement des données...');
-                    }
-
-                    int? numberOfUsers = snapshot.data?.docs.length;
-
-                    return Text(
-                      'Utilisateurs  enrégistrés: $numberOfUsers',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500, fontSize: 15.0),
-                    );
-                  },
-                ),
-                const SizedBox(height: 20.0),
-                const Row(
-                  children: [
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    /*Expanded(
-                      child: ElevatedButton(
-                        child: const Text(
-                          'Ajouter une sanction',
-                          style: TextStyle(
-                              fontSize: 10.0, fontWeight: FontWeight.bold),
+                  const SizedBox(height: 10.0),
+                 ReactiveForm(
+                   formGroup: _formSearch,
+                   child: const Row(
+                      children: [
+                        SizedBox(width: 40.0,),
+                        SingleChildScrollView(
+                          child: SizedBox(
+                              height: 50.0,
+                              width: 210.0,
+                              child: CustomTextField(
+                                formControlName: "search",
+                                obscureText: false,
+                                label: 'rechercher un utilisateur',
+                                inputType: TextInputType.text,
+                              )),
                         ),
-                        onPressed: () {
-                        },
-                      ),
-                    ),*/
-                  ],
-                ),
-                const Text(
-                  'Liste des Agents:',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10.0),
-               ReactiveForm(
-                 formGroup: _formSearch,
-                 child: const Row(
-                    children: [
-                      SizedBox(width: 40.0,),
-                      SingleChildScrollView(
-                        child: SizedBox(
-                            height: 50.0,
-                            width: 210.0,
-                            child: CustomTextField(
-                              formControlName: "search",
-                              obscureText: false,
-                              label: 'rechercher un utilisateur',
-                              inputType: TextInputType.text,
-                            )),
-                      ),
-                      //IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-                    ],
+                        //IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+                      ],
+                    ),
+                 ),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: StreamBuilder<List<User>>(
+                      stream: readUsers(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final users = snapshot.data!;
+                          return ListView(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            children: /*users.map(buildUser).toList(),*/
+                                users.map(buildUser).toList(),
+                          );
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
+                    ),
                   ),
-               ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: StreamBuilder<List<User>>(
-                    stream: readUsers(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        final users = snapshot.data!;
-                        return ListView(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          children: /*users.map(buildUser).toList(),*/
-                              users.map(buildUser).toList(),
-                        );
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    },
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

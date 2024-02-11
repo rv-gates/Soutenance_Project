@@ -28,10 +28,10 @@ class MyNewApp extends StatelessWidget {
               print (dataList);
             }*/
            // var sna = snapshot.data!.docs.first.data();
-            var data = Map<String, dynamic>.from(snapshot.data!.docs.first.data() as Map<String, dynamic>);
-            Map<String, dynamic> decodedData = json.decode(json.encode(data));
+            final doc  = snapshot.data!.docs.first.data();
+            final data = json.encode(doc);
             //print(data);
-            return YourQRWidget(decodedData); // Passer les données au widget pour générer le QR code
+            return YourQRWidget(data); // Passer les données au widget pour générer le QR code
           }
         },
       ),
