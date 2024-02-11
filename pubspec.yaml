@@ -52,7 +52,6 @@ dependencies:
   mobile_scanner: ^3.5.2
   qr_code_scanner: ^1.0.1
   date_field: ^3.0.5
-  dropdown_below: ^1.0.3
   flutter_datetime_picker: ^1.5.1
 
 dev_dependencies:
