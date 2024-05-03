@@ -1,10 +1,14 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../shared/enums/role_user.dart';
+
 part 'user.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class User {
-  final String email, firstName, lastName, matricule, role;
+  final String email, firstName, lastName, matricule;
+  final RoleUser role;
+  final String phoneNumber;
 
   const User({
     required this.email,
@@ -12,6 +16,7 @@ class User {
     required this.lastName,
     required this.matricule,
     required this.role,
+    required this.phoneNumber,
   });
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
@@ -43,7 +48,9 @@ class UserCreated extends User {
       required super.firstName,
       required super.lastName,
       required super.matricule,
-      required super.role});
+      required super.role,
+        required super.phoneNumber
+      });
 
   Map<String, dynamic> toJson() => _$UserCreatedToJson(this);
 

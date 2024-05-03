@@ -1,1 +1,1 @@
-enum RoleUser {user, admin}
+enum RoleUser {agent, administrateur}

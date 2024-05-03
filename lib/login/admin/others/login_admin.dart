@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:soutenance_app/login/admin/drawer/drawer_screen.dart';
@@ -65,7 +64,7 @@ class _LoginAdminState extends State<LoginAdmin> {
               const SizedBox(
                 height: 20.0,
               ),
-              SizedBox(
+              const SizedBox(
                   width: 200.0,
                   child: CustomTextField(
                     //controller: userNameController,
@@ -76,7 +75,7 @@ class _LoginAdminState extends State<LoginAdmin> {
               const SizedBox(
                 height: 7.0,
               ),
-              SizedBox(
+              const SizedBox(
                   width: 200.0,
                   child: CustomTextField(
                     //controller: emailController,

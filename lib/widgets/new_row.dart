@@ -17,9 +17,7 @@ class NewRow extends StatelessWidget {
           icon,
           color: Colors.white,
         ),
-        const SizedBox(
-          width: 20,
-        ),
+
         Text(
           text,
           style: const TextStyle(color: Colors.white),

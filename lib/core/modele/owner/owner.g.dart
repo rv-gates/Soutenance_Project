@@ -23,8 +23,8 @@ Map<String, dynamic> _$OwnerToJson(Owner instance) => <String, dynamic>{
     };
 
 const _$GendersEnumMap = {
-  Genders.male: 'male',
-  Genders.female: 'female',
+  Genders.masculin: 'masculin',
+  Genders.feminin: 'feminin',
 };
 
 OwnerCreated _$OwnerCreatedFromJson(Map<String, dynamic> json) => OwnerCreated(

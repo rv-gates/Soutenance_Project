@@ -54,7 +54,6 @@ class DataManagementState extends State<DataManagement> {
                      showAddDriverDialog();
                     if (!mounted) return;
 
-                    Utils.showSnackBar(context, 'usager enrégistré');
                   },
                   child: const Card(
                     color: Colors.white38,

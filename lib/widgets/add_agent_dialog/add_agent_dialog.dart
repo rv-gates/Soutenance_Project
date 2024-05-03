@@ -1,10 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../core/modele/user.dart';
-import '../../core/service/authentification_service.dart';
 import '../../shared/enums/role_user.dart';
+import '../../shared/services/user_service.dart';
 import '../custom_text_field.dart';
 
 class AddAgentDialog extends ConsumerStatefulWidget {
@@ -16,27 +18,28 @@ class AddAgentDialog extends ConsumerStatefulWidget {
 
 class _AddAgentDialogState extends ConsumerState<AddAgentDialog> {
   late final FormGroup _form;
-  late final FormControl _passwordCtlr;
+  late final FormControl _passwordCtlr, role;
 
   @override
   void initState() {
     super.initState();
 
-    _passwordCtlr = FormControl<String>(
-        value: '', validators: [Validators.required, Validators.minLength(8)]);
+    _passwordCtlr = FormControl<String>( validators: [Validators.required, Validators.minLength(8)]);
+    //role = ;
 
     _form = fb.group({
       "email": FormControl<String>(
-          value: '', validators: [Validators.required, Validators.email]),
+           validators: [Validators.required, Validators.email]),
       "firstName":
-          FormControl<String>(value: '', validators: [Validators.required]),
+      FormControl<String>( validators: [Validators.required]),
       "lastName":
-          FormControl<String>(value: '', validators: [Validators.required]),
+      FormControl<String>( validators: [Validators.required]),
       "matricule":
-          FormControl<String>(value: '', validators: [Validators.required]),
+      FormControl<String>( validators: [Validators.required]),
+      "phoneNumber":
+      FormControl<String>( validators: [Validators.required]),
       "password": _passwordCtlr,
-      "role": FormControl<RoleUser>(
-           validators: [Validators.required]),
+      "role": FormControl<RoleUser>( validators: [Validators.required]),
     });
   }
 
@@ -54,11 +57,14 @@ class _AddAgentDialogState extends ConsumerState<AddAgentDialog> {
         ),
       ),
       content: SizedBox(
-        height: MediaQuery.of(context).size.height / 1.5,
+        height: MediaQuery
+            .of(context)
+            .size
+            .height / 1.5,
         child: SingleChildScrollView(
           child: ReactiveForm(
             formGroup: _form,
-            child:  Column(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(
@@ -68,7 +74,7 @@ class _AddAgentDialogState extends ConsumerState<AddAgentDialog> {
                   padding: EdgeInsets.only(bottom: 8.0),
                   child: SingleChildScrollView(
                     child: CustomTextField(
-                        //controller: emailController,
+                      //controller: emailController,
                         formControlName: "email",
                         label: "Adresse mail par défaut",
                         inputType: TextInputType.emailAddress),
@@ -77,47 +83,58 @@ class _AddAgentDialogState extends ConsumerState<AddAgentDialog> {
                 const Padding(
                   padding: EdgeInsets.only(bottom: 8.0),
                   child: CustomTextField(
-                      // controller: lastNameController,
-                      formControlName: "firstName",
-                      label: "Nom",
-                      ),
+                    // controller: lastNameController,
+                    formControlName: "firstName",
+                    label: "Nom",
+                  ),
                 ),
                 const Padding(
                   padding: EdgeInsets.only(bottom: 8.0),
                   child: CustomTextField(
-                      // controller: firstNameController,
-                      formControlName: "lastName",
-                      label: "prénom",
-                     ),
+                    // controller: firstNameController,
+                    formControlName: "lastName",
+                    label: "prénom",
+                  ),
                 ),
                 const Padding(
                   padding: EdgeInsets.only(bottom: 8.0),
                   child: CustomTextField(
-                      //controller: matriculeController,
-                      formControlName: "matricule",
-                      label: "matricule",
-                      ),
+                    //controller: matriculeController,
+                    formControlName: "matricule",
+                    label: "matricule",
+                  ),
                 ),
+                 Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: CustomTextField(
+                    formControl: _passwordCtlr,
+                    // controller: passwordController,
+                    obscureText: false,
+                    label: "mot de passe par default",
+                  ),
+                ),
+
                 const Padding(
                   padding: EdgeInsets.only(bottom: 8.0),
                   child: CustomTextField(
-                      formControlName: "password",
-                      // controller: passwordController,
-                      obscureText: false,
-                      label: "mot de passe par default",
-                      ),
+                    // controller: lastNameController,
+                    formControlName: "phoneNumber",
+                    label: "numéro de téléphone",
+                  ),
                 ),
 
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: ReactiveDropdownField<RoleUser>(
+                    isExpanded: true ,
                     formControlName: 'role',
-                    hint: const Text("catégorie de l'agent"),
+                    hint: const Text("catégorie de l'utilisateur"),
                     items: RoleUser.values
-                        .map((item) => DropdownMenuItem<RoleUser>(
-                      value: item,
-                      child: Text(item.name),
-                    ))
+                        .map((item) =>
+                        DropdownMenuItem<RoleUser>(
+                          value: item,
+                          child: Text(item.name),
+                        ))
                         .toList(),
                   ),
                 ),
@@ -143,7 +160,7 @@ class _AddAgentDialogState extends ConsumerState<AddAgentDialog> {
             ),
             Expanded(
               child: ElevatedButton(
-                onPressed: signUpUser,
+                onPressed: (){signUpUser(); print (_form.value);},
                 child: const Text(
                   'Ajouter',
                   style: TextStyle(fontSize: 12.0),
@@ -157,18 +174,33 @@ class _AddAgentDialogState extends ConsumerState<AddAgentDialog> {
   }
 
   Future<void> signUpUser() async {
+
+    try{
     if (_form.invalid) return;
 
-    final user = User.fromJson(_form.value);
+    final createAgent =
+    await ref.read(userService).signUpUser(
+      user: User.fromJson({
+        ..._form.value,
+        'role':(_form.control('role') as FormControl<RoleUser>).value!.name,
 
+      }),
+      password: _passwordCtlr.value!,
+    );
+    /*final user = User.fromJson({
+      ..._form.value,
+      'role': (_form.control('role') as FormControl<RoleUser>).value!.name,
+
+    });
     final res = await ref.read(firebaseAuthProvider).signUpUser(
-          user: user,
-          password: _passwordCtlr.value,
-        );
+        user: user,
+        password: _passwordCtlr.value ?? "",
+        //role: _form.controls['role']!.value as RoleUser,
+    );*/
 
     if (!mounted) return;
 
-    Navigator.pop(context);
+    Navigator.pop(context, createAgent);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -191,5 +223,9 @@ class _AddAgentDialogState extends ConsumerState<AddAgentDialog> {
         ),
       ),
     );
+        }catch(e){
+      log('', name: 'REGISTER USER', error: e);
+    }
+
   }
 }

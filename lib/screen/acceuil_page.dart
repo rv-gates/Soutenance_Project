@@ -25,7 +25,7 @@ class _HomeScreen extends State<AcceuilPage> {
             const CircleAvatar(
               radius: 85.0,
               backgroundImage: AssetImage(
-                'images/dgtt2.png',
+                'images/dgtt2.jpg',
               ),
             ),
             const SizedBox(
@@ -35,7 +35,7 @@ class _HomeScreen extends State<AcceuilPage> {
               margin: const EdgeInsets.all(5.0),
               child: const Column(
                 children: [
-                  Text("Bienvenu sur Authentics",
+                  Text("Bienvenue sur Authentics",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -48,7 +48,7 @@ class _HomeScreen extends State<AcceuilPage> {
                   Padding(
                     padding: EdgeInsets.only(left: 40.0, right: 40.0),
                     child: Text(
-                        "l'application qui vous aide à controler les permis et les carte grise des usagers",
+                        "l'application qui vous aide à controler les permis et les cartes grises des usagers",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontWeight: FontWeight.w500,

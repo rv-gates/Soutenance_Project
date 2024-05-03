@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:soutenance_app/login/admin/drawer/drawer_column.dart';
 import '../../../core/service/authentification_service.dart';
+import '../../../screen/acceuil_page.dart';
 import '../../../widgets/new_row.dart';
 
 class DrawerScreen extends ConsumerStatefulWidget {
@@ -82,6 +83,35 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
             GestureDetector(
               onTap: (){
                 ref.read(firebaseAuthProvider).signOut();
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) {
+                    return const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("DECONNEXION", style: TextStyle(fontSize: 20,color: Colors.white, fontWeight: FontWeight.w600),),
+                          SizedBox(height: 13.0,),
+                          CircularProgressIndicator(),
+                        ],
+                      ),
+                    );
+                  },
+                );
+
+                Future.delayed(const Duration(seconds: 7), () {
+                  Navigator.of(context, rootNavigator: true).pop();
+
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AcceuilPage(),
+                    ),
+                        (route) => false,
+                  );
+                });
               },
               child: Row(
                 children: <Widget>[

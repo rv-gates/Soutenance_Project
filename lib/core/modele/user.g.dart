@@ -11,7 +11,8 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       matricule: json['matricule'] as String,
-      role: json['role'] as String,
+      role: $enumDecode(_$RoleUserEnumMap, json['role']),
+      phoneNumber: json['phoneNumber'] as String,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -19,8 +20,14 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'firstName': instance.firstName,
       'lastName': instance.lastName,
       'matricule': instance.matricule,
-      'role': instance.role,
+      'role': _$RoleUserEnumMap[instance.role]!,
+      'phoneNumber': instance.phoneNumber,
     };
+
+const _$RoleUserEnumMap = {
+  RoleUser.agent: 'agent',
+  RoleUser.administrateur: 'administrateur',
+};
 
 UserCreated _$UserCreatedFromJson(Map<String, dynamic> json) => UserCreated(
       id: json['id'] as String,
@@ -28,7 +35,8 @@ UserCreated _$UserCreatedFromJson(Map<String, dynamic> json) => UserCreated(
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       matricule: json['matricule'] as String,
-      role: json['role'] as String,
+      role: $enumDecode(_$RoleUserEnumMap, json['role']),
+      phoneNumber: json['phoneNumber'] as String,
     );
 
 Map<String, dynamic> _$UserCreatedToJson(UserCreated instance) =>
@@ -37,6 +45,7 @@ Map<String, dynamic> _$UserCreatedToJson(UserCreated instance) =>
       'firstName': instance.firstName,
       'lastName': instance.lastName,
       'matricule': instance.matricule,
-      'role': instance.role,
+      'role': _$RoleUserEnumMap[instance.role]!,
+      'phoneNumber': instance.phoneNumber,
       'id': instance.id,
     };

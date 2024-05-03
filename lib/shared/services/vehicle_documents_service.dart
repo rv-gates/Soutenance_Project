@@ -10,6 +10,16 @@ class VehicleDocumentsService extends FirestoreService {
   @override
   String get collection => 'VEHICLE_DOCUMENTS';
 
+  Future<List<VehicleDocumentCreated>> get vehicleDocument async {
+    try {
+      final docs = await super.docs;
+      return docs.map((item) => VehicleDocumentCreated.fromJson(item)).toList();
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+
   Future<VehicleDocumentCreated> registerVehicleDocument(
       VehicleDocument vehicleDocument) async {
     try {
@@ -20,6 +30,17 @@ class VehicleDocumentsService extends FirestoreService {
 
       return VehicleDocumentCreated.fromJson(data);
     } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<VehicleDocumentCreated> getVehicle(String id) async{
+    try{
+      final data= await super.getDoc(id);
+      if(data == null) throw Exception("une erreur s'est produite");
+      return VehicleDocumentCreated.fromJson(data);
+
+    } catch(e){
       rethrow;
     }
   }

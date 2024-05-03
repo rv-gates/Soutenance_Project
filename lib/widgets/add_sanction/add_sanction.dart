@@ -5,8 +5,7 @@ import 'package:soutenance_app/shared/services/sanction_service.dart';
 import 'package:soutenance_app/widgets/utils.dart';
 
 import '../../core/modele/sanction/sanction.dart';
-import '../../core/service/firestore_service.dart';
-import '../../shared/services/sanction_service.dart';
+
 import '../custom_text_field.dart';
 
 class AddSanction extends ConsumerStatefulWidget {

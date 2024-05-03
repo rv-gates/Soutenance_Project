@@ -4,7 +4,8 @@ import 'package:uuid/v4.dart';
 
 import '../../core/service/firestore_service.dart';
 
-final controlService = Provider.autoDispose((ref) => _ControlDocumentService(ref));
+final controlService =
+    Provider.autoDispose((ref) => _ControlDocumentService(ref));
 
 class _ControlDocumentService extends FirestoreService {
   final Ref _ref;
@@ -14,7 +15,8 @@ class _ControlDocumentService extends FirestoreService {
   @override
   String get collection => 'CONTROLE_DOCUMENT';
 
-  Future <ControlDocumentCreated> registerControlDocument({required ControlDocument document}) async {
+  Future<ControlDocumentCreated> registerControlDocument(
+      {required ControlDocument document}) async {
     try {
       final id = const UuidV4().generate();
       final dataControl = {
@@ -25,6 +27,30 @@ class _ControlDocumentService extends FirestoreService {
       await super.post(id: id, data: dataControl);
 
       return ControlDocumentCreated.fromJson(dataControl);
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<List<ControlDocumentCreated>> get controlDocuments async {
+    try {
+      final docs = await super.docs;
+
+      return docs
+          .map((e) => ControlDocumentCreated.fromJson(e))
+          .toList(growable: false);
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<List<ControlDocumentCreated>> getDocumentByDriverId(String id) async {
+    try {
+      final docs = await super.query('idDriver', isEqualTo: id);
+
+      return docs
+          .map((e) => ControlDocumentCreated.fromJson(e))
+          .toList(growable: false);
     } catch (_) {
       rethrow;
     }

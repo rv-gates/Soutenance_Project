@@ -1,1 +1,1 @@
-enum Genders { male, female }
+enum Genders { masculin, feminin }

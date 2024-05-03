@@ -9,6 +9,7 @@ import 'package:soutenance_app/shared/enums/driver_license_type.dart';
 import '../../../../core/modele/driver/driver.dart';
 import '../../../../shared/services/drivers_service.dart';
 import '../../../../widgets/custom_text_field.dart';
+import '../../../../widgets/utils.dart';
 
 class AddDriver extends ConsumerStatefulWidget {
   const AddDriver({super.key});
@@ -56,7 +57,7 @@ class _AddDriverState extends ConsumerState<AddDriver> {
           padding: EdgeInsets.all(8.0),
           child: Center(
             child: Text(
-              'Ajouter un agent',
+              'Ajouter un usager',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
@@ -184,6 +185,7 @@ class _AddDriverState extends ConsumerState<AddDriver> {
               'categories': selectedCategories.map((category) => category.name).toList(),
             }),
           );
+      Utils.showSnackBar(context, 'usager enrégistré');
 
       if (!mounted) return;
 

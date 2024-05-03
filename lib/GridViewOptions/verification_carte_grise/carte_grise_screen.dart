@@ -21,7 +21,7 @@ class _CarteGriseScreenState extends State<CarteGriseScreen> {
           children: [
             SizedBox(height: 16.0),
             TextWidget(
-                text: "Numéro \nd\'immatriculation :",
+                text: "Numéro \nd\'immatriculation : ",
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold),
             SizedBox(height: 12.0),

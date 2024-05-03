@@ -25,13 +25,19 @@ class _ScanPageState extends ConsumerState<ScanPage> {
     _qrStreamCtrl = StreamController();
 
     _qrStreamCtrl.stream.listen((data) {
-      if (data.isNotEmpty) {
-        streamHasEmitted = true;
-        final driverLicenseId = json.decode(data)['id'];
-
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => PermitInformation(driverLicenseId: driverLicenseId)));
-        // TODO: creer methode _openPermitInformationPage
+      try{
+        if (data.isNotEmpty) {
+          streamHasEmitted = true;
+          final driverLicenseId = json.decode(data)['id'];
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => PermitInformation(driverLicenseId: driverLicenseId)));
+        }
+      }catch(e){
+        showDialog(
+          context: context,
+          builder: (BuildContext context) =>
+          const AlertDialog(title: Text("Données incorrect")),);
       }
+
     });
   }
 

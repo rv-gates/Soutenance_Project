@@ -11,6 +11,7 @@ import 'package:soutenance_app/shared/enums/vehicle_document_type.dart';
 import 'package:soutenance_app/shared/services/vehicles_service.dart';
 
 import '../../../../widgets/custom_text_field.dart';
+import '../../../../widgets/utils.dart';
 
 class AddVehicle extends ConsumerStatefulWidget {
   const AddVehicle({super.key});
@@ -88,7 +89,7 @@ class _AddVehicleState extends ConsumerState<AddVehicle> {
                           firstName: 'Herllias',
                           phoneNumber: '06 615 82 91',
                           civility: 'monsieur',
-                          gender: Genders.male,
+                          gender: Genders.masculin,
                         ),
                         child: Text('Herllias IBATA'),
                       ),
@@ -100,7 +101,7 @@ class _AddVehicleState extends ConsumerState<AddVehicle> {
                           firstName: 'Steeven',
                           phoneNumber: '05 045 78 60',
                           civility: 'monsieur',
-                          gender: Genders.male,
+                          gender: Genders.masculin,
                         ),
                         child: Text('Steeven DELUCIS'),
                       ),
@@ -111,11 +112,33 @@ class _AddVehicleState extends ConsumerState<AddVehicle> {
                           lastName: 'NGOULOU',
                           firstName: 'Hervé',
                           phoneNumber: '06 960 45 32',
-                          civility: 'madale',
-                          gender: Genders.female,
+                          civility: 'monsieur',
+                          gender: Genders.masculin,
                         ),
                         child: Text('Hervé NGOULOU'),
-                      )
+                      ),
+                      DropdownMenuItem<OwnerCreated>(
+                        value: OwnerCreated(
+                          id: 'DGT128',
+                          lastName: 'TSETOU',
+                          firstName: 'Richel',
+                          phoneNumber: '06 355 55 00',
+                          civility: 'monsieur',
+                          gender: Genders.masculin,
+                        ),
+                        child: Text('Richel TSETOU'),
+                      ),
+                      DropdownMenuItem<OwnerCreated>(
+                        value: OwnerCreated(
+                          id: 'RVD128',
+                          lastName: 'SAMBO',
+                          firstName: 'Daniella',
+                          phoneNumber: '06 555 51 22',
+                          civility: 'monsieur',
+                          gender: Genders.feminin,
+                        ),
+                        child: Text('Daniella SAMBO'),
+                      ),
                     ],
                   ),
 
@@ -219,7 +242,7 @@ class _AddVehicleState extends ConsumerState<AddVehicle> {
           );
 
       if (!mounted) return;
-
+      Utils.showSnackBar(context, 'véhiculé enrégistré');
       Navigator.pop<VehicleCreated>(context, createdVehicle);
     } catch (e) {
       log('', name: 'ADD VEHICULE', error: e);

@@ -28,7 +28,7 @@ class MyNewApp extends StatelessWidget {
               print (dataList);
             }*/
            // var sna = snapshot.data!.docs.first.data();
-            final doc  = snapshot.data!.docs.first.data();
+            final doc  = snapshot.data!.docs[2].data();
             final data = json.encode(doc);
             //print(data);
             return YourQRWidget(data); // Passer les données au widget pour générer le QR code

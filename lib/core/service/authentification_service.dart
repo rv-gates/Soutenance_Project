@@ -3,11 +3,7 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:regexpattern/regexpattern.dart';
 import 'package:soutenance_app/core/modele/user.dart' as model;
-import 'package:soutenance_app/shared/services/user_service.dart';
-
-import 'firestore_service.dart';
 
 final firebaseAuthProvider = Provider((ref) => AuthentificationService(ref));
 
@@ -17,9 +13,10 @@ class AuthentificationService {
 
   AuthentificationService(this._ref);
 
-  Future<model.User> signUpUser({
+  /*Future<model.User> signUpUser({
     required model.User user,
     required String password,
+    //required RoleUser role,
   }) async {
     try {
       if (user.email.isEmpty && user.email.isEmail()) {
@@ -60,7 +57,7 @@ class AuthentificationService {
     } catch (_) {
       rethrow;
     }
-  }
+  }*/
 
   void signOut() async {
     await FirebaseAuth.instance.signOut();
@@ -73,14 +70,16 @@ class AuthentificationService {
       var currentUser= FirebaseAuth.instance.currentUser;
       await currentUser!.reauthenticateWithCredential(cred).then((value) => {
         currentUser.updatePassword(newPassword),
-      }/*).catchError((e)*/ );
+        print(newPassword),
+
+      });
 
     }catch(e) {
       print(e.toString());
     }
     }
 
-  Future<void> loginUser({
+  /*Future<void> loginUser({
     required String password,
     required String email,
   }) async {
@@ -93,6 +92,6 @@ class AuthentificationService {
     } catch (error) {
       print(error.toString());
     }
-  }
+  }*/
   }
 

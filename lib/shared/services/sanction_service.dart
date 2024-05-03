@@ -9,17 +9,24 @@ class SanctionService extends FirestoreService {
   @override
   String get collection => 'SANCTION';
 
-  Future<SanctionCreated> registerSanction({required Sanction sanctions}) async {
+  Future<SanctionCreated> registerSanction(
+      {required Sanction sanctions}) async {
     try {
-       final id = const UuidV4().generate();
-       final data = {
-         ...sanctions.toJson(),
-         'id' : id,
-       };
-       await super.post(id: id, data: data);
-       return SanctionCreated.fromJson(data);
+      final id = const UuidV4().generate();
+      final data = {
+        ...sanctions.toJson(),
+        'id': id,
+      };
+      await super.post(id: id, data: data);
+      return SanctionCreated.fromJson(data);
     } catch (_) {
       rethrow;
     }
+  }
+
+  Future<List<SanctionCreated>> get sanctions async {
+    final docs = await super.docs;
+
+    return docs.map((e) => SanctionCreated.fromJson(e)).toList(growable: false);
   }
 }

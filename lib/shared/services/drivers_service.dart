@@ -5,6 +5,7 @@ import 'package:soutenance_app/shared/services/driver_licenses_service.dart';
 import 'package:uuid/v4.dart';
 
 import '../../core/modele/driver/driver.dart';
+import '../../core/modele/user.dart';
 
 final driversService = Provider.autoDispose((ref) => _DriversService(ref));
 
@@ -22,6 +23,17 @@ class _DriversService extends FirestoreService {
 
       return docs.map((item) => DriverCreated.fromJson(item)).toList();
     } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<DriverCreated> getUser(String id) async{
+    try{
+      final data= await super.getDoc(id);
+      if(data == null) throw Exception("une erreur s'est produite");
+      return DriverCreated.fromJson(data);
+
+    } catch(e){
       rethrow;
     }
   }

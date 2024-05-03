@@ -1,13 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:soutenance_app/core/service/authentification_service.dart';
-import 'package:soutenance_app/core/service/firestore_service.dart';
 import 'package:soutenance_app/screen/home/home.dart';
 import 'package:soutenance_app/widgets/custom_text_field.dart';
-
-import '../users/login_screen.dart';
 
 class ForgotPassword extends ConsumerStatefulWidget {
   const ForgotPassword({super.key});
@@ -20,14 +17,15 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
   late final FormGroup _format;
   late final FormControl _passwordCtlr;
   late final FormControl _newPasswordCtlr;
+  User? user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
     super.initState();
     _passwordCtlr = FormControl<String>(
-        value: '', validators: [Validators.required, Validators.minLength(8)]);
+         validators: [Validators.required, Validators.minLength(8)]);
     _newPasswordCtlr = FormControl<String>(
-        value: '', validators: [Validators.required, Validators.minLength(8)]);
+         validators: [Validators.required, Validators.minLength(8)]);
     _format = fb.group({
       "oldPassword": _passwordCtlr,
       "newPassword": _newPasswordCtlr,
@@ -102,8 +100,13 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                   child: ElevatedButton(
                     style: const ButtonStyle(),
                     onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Mot de passe modifié'),
+                        ),
+                      );
                       ref.read(firebaseAuthProvider).changedPassword(
-                          email: null,
+                          email: user!.email,
                           oldPassword: _passwordCtlr.value,
                           newPassword: _newPasswordCtlr.value);
                       // newPassword(docID: firestoreService.user.id);
@@ -121,3 +124,4 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
     );
   }
 }
+
